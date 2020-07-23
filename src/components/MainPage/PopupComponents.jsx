@@ -25,6 +25,8 @@ const useStyles = makeStyles((theme) => ({
     width:"70%"
   },
   root: {
+      display:'flex',
+      flexDirection:'column',
       '& .MuiTextField-root': {
         margin: theme.spacing(1),
         width: '90%',
@@ -37,113 +39,13 @@ const useStyles = makeStyles((theme) => ({
     
 }));
 
-export const Popup = (props) => {
+export const PopupComponent = (props) => {
   const classes = useStyles();
-  const {title, open, close, children} = props
-  return (
-    <div>
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        className={classes.modal}
-        open={open}
-        onClose={close}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={open}>
-          <div className={classes.paper}>
-            <h2 id="transition-modal-title">{title}</h2>
-            {children}
-          </div>
-        </Fade>
-      </Modal>
-    </div>
-  )
-}
+  const {title, open, close, type, storeList} = props
 
-export const PopupAdd = ({open, handleClose}) => {
-  const classes = useStyles();
-  return (
-    <Popup open={open} close={handleClose} title="Add new Item">
-       <form className={classes.root} noValidate autoComplete="off">
-            <TextField
-                required
-                id="outlined-required"
-                label="Comodity"
-                variant="outlined"
-                InputLabelProps={{
-                shrink: true,
-                }}
-                />
-                <TextField
-                required
-                id="outlined-required"
-                label="Province Area"
-                variant="outlined"
-                InputLabelProps={{
-                shrink: true,
-                }}
-                />
-                <TextField
-                required
-                id="outlined-required"
-                label="City Area"
-                variant="outlined"
-                InputLabelProps={{
-                shrink: true,
-                }}
-                />
-                <TextField
-                required
-                id="outlined-required"
-                label="Size"
-                type="number"
-                variant="outlined"
-                InputLabelProps={{
-                shrink: true,
-                }}
-                />
-                <TextField
-                required
-                id="outlined-required"
-                label="Price"
-                type="number"
-                variant="outlined"
-                InputLabelProps={{
-                shrink: true,
-                }}
-                />
-                <TextField
-                required
-                id="outlined-required"
-                label="Parsed Date"
-                type="date"
-                variant="outlined"
-                InputLabelProps={{
-                shrink: true,
-                }}
-                />
-            </form>
-            <div className="button-submit">
-                <Button variant="contained" color="secondary" disableElevation>
-                    Submit
-                </Button>
-            </div>
-    </Popup>        
-  );
-}
-
-export const PopupFilter = ({open, close}) => {
-  const classes = useStyles();
   const [sizeList, setSizeList] = useState([])
   const [proviceList, setProvinceList] = useState([])
   const [cityList, setCityList] = useState([])
-  const storeList = new SteinStore("https://stein.efishery.com/v1/storages/5e1edf521073e315924ceab4")
-
 
   const fetchListSize = () => {
     storeList.read('option_size', {})
@@ -180,47 +82,154 @@ export const PopupFilter = ({open, close}) => {
 }, [])
 
   return (
-    <Popup open={open} close={close} title="Filter">
-      <div className="popup-filter">
-        <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="grouped-native-select">Size</InputLabel>
-          <Select native defaultValue="" id="grouped-native-select">
-            <option aria-label="None" value="" />
-            {sizeList.map((size, index) => {
-              return (
-                <option value={size} key={index}>{size} cm</option>
-              )
-            })}
-          </Select>
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="grouped-native-select">Province</InputLabel>
-          <Select native defaultValue="" id="grouped-native-select">
-            <option aria-label="None" value="" />
-            {proviceList.map((province, index) => {
-              return (
-                <option value={province} key={index}>{province}</option>
-              )
-            })}
-          </Select>
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="grouped-native-select">City</InputLabel>
-          <Select native defaultValue="" id="grouped-native-select">
-            <option aria-label="None" value="" />
-            {cityList.map((city, index) => {
-              return (
-                <option value={city} key={index}>{city}</option>
-              )
-            })}
-          </Select>
-      </FormControl>
+    <div>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={close}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+          <div className={classes.paper}>
+            <h2 id="transition-modal-title">{title}</h2>
+
+              {type === "filter" ? (
+                <>
+                <div className="popup-filter">
+                <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="grouped-native-select">Size</InputLabel>
+                  <Select native defaultValue="" id="grouped-native-select">
+                    <option aria-label="None" value="" />
+                    {sizeList.map((size, index) => {
+                      return (
+                        <option value={size} key={index}>{size} cm</option>
+                      )
+                    })}
+                  </Select>
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="grouped-native-select">Province</InputLabel>
+                  <Select native defaultValue="" id="grouped-native-select">
+                    <option aria-label="None" value="" />
+                    {proviceList.map((province, index) => {
+                      return (
+                        <option value={province} key={index}>{province}</option>
+                      )
+                    })}
+                  </Select>
+              </FormControl>
+              <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="grouped-native-select">City</InputLabel>
+                  <Select native defaultValue="" id="grouped-native-select">
+                    <option aria-label="None" value="" />
+                    {cityList.map((city, index) => {
+                      return (
+                        <option value={city} key={index}>{city}</option>
+                      )
+                    })}
+                  </Select>
+              </FormControl>
+            </div>
+            <div className="button-submit">
+                <Button variant="contained" color="secondary" disableElevation>
+                    Submit
+                </Button>
+            </div>
+            </>
+              ):(
+
+                <>
+                 <form className={classes.root} noValidate autoComplete="off">
+                  <TextField
+                      required
+                      id="outlined-required"
+                      label="Comodity"
+                      variant="outlined"
+                      InputLabelProps={{
+                      shrink: true,
+                      }}
+                      />
+                  <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="grouped-native-select">Province</InputLabel>
+                    <Select native defaultValue="" id="grouped-native-select">
+                      <option aria-label="None" value="" />
+                      {proviceList.map((province, index) => {
+                        return (
+                          <option value={province} key={index}>{province}</option>
+                        )
+                      })}
+                    </Select>
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                  <InputLabel htmlFor="grouped-native-select">City</InputLabel>
+                    <Select native defaultValue="" id="grouped-native-select">
+                      <option aria-label="None" value="" />
+                      {cityList.map((city, index) => {
+                        return (
+                          <option value={city} key={index}>{city}</option>
+                        )
+                      })}
+                    </Select>
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                <InputLabel htmlFor="grouped-native-select">Size</InputLabel>
+                  <Select native defaultValue="" id="grouped-native-select">
+                    <option aria-label="None" value="" />
+                    {sizeList.map((size, index) => {
+                      return (
+                        <option value={size} key={index}>{size} cm</option>
+                      )
+                    })}
+                  </Select>
+              </FormControl>
+              <TextField
+              required
+              id="outlined-required"
+              label="Price"
+              type="number"
+              variant="outlined"
+              InputLabelProps={{
+              shrink: true,
+              }}
+              />
+              <TextField
+              required
+              id="outlined-required"
+              label="Parsed Date"
+              type="date"
+              variant="outlined"
+              InputLabelProps={{
+              shrink: true,
+              }}
+              />
+              <TextField
+              required
+              id="outlined-required"
+              label="Time stamp"
+              type="time"
+              variant="outlined"
+              InputLabelProps={{
+              shrink: true,
+              }}
+              />
+            </form>
+            <div className="button-submit">
+                <Button variant="contained" color="secondary" disableElevation>
+                    Submit
+                </Button>
+            </div>
+                </>
+              )}
+          </div>
+        </Fade>
+      </Modal>
     </div>
-    <div className="button-submit">
-        <Button variant="contained" color="secondary" disableElevation>
-            Submit
-        </Button>
-    </div>
-    </Popup>
   )
-} 
+}
+

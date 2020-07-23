@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -8,6 +8,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Container from '@material-ui/core/Container';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 import { withStyles } from '@material-ui/core/styles';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -18,7 +19,8 @@ import FilterNoneIcon from '@material-ui/icons/FilterNone';
 import './header.scss'
 
 export const HeaderComponent = (props) => {
-  const {children, addItemToggle, filterToggle} = props;
+  const [searchValue, setSearchValue] = useState('')
+  const {children, addItemToggle, filterToggle, setList, store, fetchList} = props;
 
   const StyledMenu = withStyles({
     paper: {
@@ -61,6 +63,18 @@ export const HeaderComponent = (props) => {
     setAnchorEl(null);
   };
 
+  const fetchSearch = (keyCode) => {
+    if(keyCode === 13) { 
+      let search = searchValue.replace(/^[ ]+|[ ]$/g,'');
+      if(search) {
+        store.read("List", { search: { komoditas: search } }).then(data => {
+          console.log(data, search);
+          setList(data)
+        });
+      }
+    } 
+  }
+
 
   return (
     <React.Fragment>
@@ -87,9 +101,10 @@ export const HeaderComponent = (props) => {
         <Typography variant="h6">efishery</Typography>
         <div className="header-search">
           <div className="search-icon">
-            <SearchIcon />
+            
+            {searchValue ? <div style={{cursor:'pointer', zIndex: 10}} onClick={() => fetchList()}><HighlightOffIcon color="secondary"/></div> : <SearchIcon />}
           </div>
-          <InputBase placeholder="Search…" classes="header-input" inputProps={{ 'aria-label': 'search' }} />
+          <InputBase placeholder="Search by comodity…" classes="header-input" inputProps={{ 'aria-label': 'search' }} value={searchValue} onChange={({ target: { value } }) => setSearchValue(value)} onKeyUp={( { keyCode }) => fetchSearch( keyCode ) }/>
       </div>
       </Toolbar>
     </AppBar>

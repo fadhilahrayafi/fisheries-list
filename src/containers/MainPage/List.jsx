@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import SteinStore from 'stein-js-client'
-import {ListData, PopupAdd, PaginationMainPage, HeaderComponent, PopupFilter} from '../../components'
+import {ListData, PaginationMainPage, HeaderComponent, PopupComponent} from '../../components'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -14,24 +14,22 @@ import Container from '@material-ui/core/Container';
 export const MainPage = () => {
     const [list, setList] = useState([])
     const [listSize, setListSize] = useState([])
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(0)
     const [popupAddStatus, setPopupAddStatus] = useState(false)
-    const [popupFilterStatus, setPopupFilterStatus] = useState(true)
+    const [popupFilterStatus, setPopupFilterStatus] = useState(false)
 
     
     const storeList = new SteinStore("https://stein.efishery.com/v1/storages/5e1edf521073e315924ceab4")
-    const listName = ["Komoditas", "Area Provinsi", "Area Kota", "Size", "Price", "Tanggal Parsed", "Timestamp"]
+    const listName = ["No.", "Comodity", "Province Area", "City Area", "Size", "Price", "Parsed Date", "Time Stamp"]
 
     const fetchList = () => {
-        storeList.read("list", {limit: page * 10, offset: 0 + ((page * 10) + 1)})
+        storeList.read("list", {limit:10, offset:(page === 0 ? 0 : (page * 10) + 1)})
         .then(data => {
             console.log(data)
             setList(data)
         })
         .catch(err => console.log(err))
     }
-
-
 
     useEffect (()=> {
         document.title="fish list"
@@ -69,9 +67,9 @@ export const MainPage = () => {
 
     return (
         <>
-        <HeaderComponent addItemToggle={setPopupAddStatus} filterToggle={setPopupFilterStatus} sizeList={listSize}>
-        {popupAddStatus ? <PopupAdd open={popupAddStatus} handleClose={() => setPopupAddStatus(false)}/> : null}
-        {popupFilterStatus ? <PopupFilter open={popupFilterStatus} close={() => setPopupFilterStatus(false)}/> : null}
+        <HeaderComponent addItemToggle={setPopupAddStatus} filterToggle={setPopupFilterStatus} sizeList={listSize} store={storeList} setList={setList} fetchList={fetchList}>
+        {popupFilterStatus ? <PopupComponent open={popupFilterStatus} close={() => setPopupFilterStatus(false)} storeList={storeList} type={"filter"}/> : null}
+        {popupAddStatus ? <PopupComponent open={popupAddStatus} close={() => setPopupAddStatus(false)} storeList={storeList} type={"add"}/> : null}
         <Container maxWidth="lg">
           <TableContainer component={Paper}>
               <Table className={classes.table} aria-label="customized table">
@@ -86,7 +84,7 @@ export const MainPage = () => {
                   </TableHead>
                   <TableBody>
                       {list.map((item, index) => {
-                          return <ListData item={item} key={index}/>
+                          return <ListData item={item} key={index} index={page === 0 ? index : (index + (page * 10))}/>
                       })}
                   </TableBody>
               </Table>
