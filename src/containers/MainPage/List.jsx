@@ -13,12 +13,10 @@ import Container from '@material-ui/core/Container';
 
 export const MainPage = () => {
     const [list, setList] = useState([])
-    const [listSize, setListSize] = useState([])
     const [page, setPage] = useState(0)
     const [popupAddStatus, setPopupAddStatus] = useState(false)
-    const [popupFilterStatus, setPopupFilterStatus] = useState(false)
+    const [popupFilterStatus, setPopupFilterStatus] = useState(true)
 
-    
     const storeList = new SteinStore("https://stein.efishery.com/v1/storages/5e1edf521073e315924ceab4")
     const listName = ["No.", "Comodity", "Province Area", "City Area", "Size", "Price", "Parsed Date", "Time Stamp"]
 
@@ -67,9 +65,9 @@ export const MainPage = () => {
 
     return (
         <>
-        <HeaderComponent addItemToggle={setPopupAddStatus} filterToggle={setPopupFilterStatus} sizeList={listSize} store={storeList} setList={setList} fetchList={fetchList}>
-        {popupFilterStatus ? <PopupComponent open={popupFilterStatus} close={() => setPopupFilterStatus(false)} storeList={storeList} type={"filter"}/> : null}
-        {popupAddStatus ? <PopupComponent open={popupAddStatus} close={() => setPopupAddStatus(false)} storeList={storeList} type={"add"}/> : null}
+        <HeaderComponent addItemToggle={setPopupAddStatus} filterToggle={setPopupFilterStatus} store={storeList} setList={setList} fetchList={fetchList}>
+        {popupFilterStatus ? <PopupComponent open={popupFilterStatus} close={() => setPopupFilterStatus(false)} storeList={storeList} type={"filter"} title={"Filter"} setList={setList} fetchList={fetchList}/> : null}
+        {popupAddStatus ? <PopupComponent open={popupAddStatus} close={() => setPopupAddStatus(false)} storeList={storeList} type={"add"} title={"Add New Comodity"} setList={setList} fetchList={fetchList}/> : null}
         <Container maxWidth="lg">
           <TableContainer component={Paper}>
               <Table className={classes.table} aria-label="customized table">
