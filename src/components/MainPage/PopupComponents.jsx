@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const PopupComponent = (props) => {
   const classes = useStyles();
-  const {title, open, close, type, storeList, setList, fetchList} = props
+  const {title, open, close, type, storeList, setList, fetchList, setStatusAlert, setMessage} = props
 
   const [sizeList, setSizeList] = useState([])
   const [proviceList, setProvinceList] = useState([])
@@ -93,6 +93,8 @@ export const PopupComponent = (props) => {
     .then(res => {
       console.log(res)
       fetchList()
+      setMessage("Successfully added new list!")
+      setStatusAlert(true)
       close()
       setKomoditas(null)
       setProvinsi(null)

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import SteinStore from 'stein-js-client'
-import {ListData, PaginationMainPage, HeaderComponent, PopupComponent} from '../../components'
+import {ListData, PaginationMainPage, HeaderComponent, PopupComponent, AlertComponent} from '../../components'
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -11,11 +11,14 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 
+
 export const MainPage = () => {
     const [list, setList] = useState([])
     const [page, setPage] = useState(0)
     const [popupAddStatus, setPopupAddStatus] = useState(false)
-    const [popupFilterStatus, setPopupFilterStatus] = useState(true)
+    const [popupFilterStatus, setPopupFilterStatus] = useState(false)
+    const [alertStatus, setAlertStatus] = useState(false)
+    const [message, setMessage] = useState(null)
 
     const storeList = new SteinStore("https://stein.efishery.com/v1/storages/5e1edf521073e315924ceab4")
     const listName = ["No.", "Comodity", "Province Area", "City Area", "Size", "Price", "Parsed Date", "Time Stamp"]
@@ -66,9 +69,11 @@ export const MainPage = () => {
     return (
         <>
         <HeaderComponent addItemToggle={setPopupAddStatus} filterToggle={setPopupFilterStatus} store={storeList} setList={setList} fetchList={fetchList}>
-        {popupFilterStatus ? <PopupComponent open={popupFilterStatus} close={() => setPopupFilterStatus(false)} storeList={storeList} type={"filter"} title={"Filter"} setList={setList} fetchList={fetchList}/> : null}
-        {popupAddStatus ? <PopupComponent open={popupAddStatus} close={() => setPopupAddStatus(false)} storeList={storeList} type={"add"} title={"Add New Comodity"} setList={setList} fetchList={fetchList}/> : null}
+        {popupFilterStatus ? <PopupComponent open={popupFilterStatus} close={() => setPopupFilterStatus(false)} storeList={storeList} type={"filter"} title={"Filter"} setList={setList} fetchList={fetchList} setStatusAlert={setAlertStatus} setMessage={setMessage}/> : null}
+        {popupAddStatus ? <PopupComponent open={popupAddStatus} close={() => setPopupAddStatus(false)} storeList={storeList} type={"add"} title={"Add New Comodity"} setList={setList} fetchList={fetchList} setStatusAlert={setAlertStatus} setMessage={setMessage}/> : null}
         <Container maxWidth="lg">
+        {alertStatus ? <AlertComponent message={message} open={alertStatus} setOpen={setAlertStatus} status={"success"}/> : null}
+
           <TableContainer component={Paper}>
               <Table className={classes.table} aria-label="customized table">
                   <TableHead>
