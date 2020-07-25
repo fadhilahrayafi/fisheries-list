@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom'
 import Pagination from '@material-ui/lab/Pagination';
+import './pagination.scss'
 
 
 export const PaginationMainPage = ({ page, setPage, maxPage, fetchList }) => {

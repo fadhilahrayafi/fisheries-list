@@ -11,7 +11,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Container from '@material-ui/core/Container';
 import './mainPage.scss'
-import Pagination from '@material-ui/lab/Pagination';
 
 export const MainPage = () => {
   const [list, setList] = useState([])
@@ -32,12 +31,7 @@ export const MainPage = () => {
   const [message, setMessage] = useState(null)
   const [loading, setLoading] = useState(false)
 
-
   const storeList = new SteinStore("https://stein.efishery.com/v1/storages/5e1edf521073e315924ceab4")
-  const listName = ["No", "Comodity", "Province Area", "City Area", "Size", "Price", "Parsed Date", "Time Stamp"]
-  const listObjectKey = ["uuid", "komoditas", "area_provinsi", "area_kota", "size", "price", "tgl_parsed", "timestamp"]
-  const listSort = [sortNo, sortComodity, sortProvince, sortCity, sortSize, sortPrice, sortDate, sortTime]
-  const listSetSort = [setSortNo, setSortComodity, setSortProvince, setSortCity, setSortSize, setSortPrice, setSortDate, setSortTime]
 
   const fetchList = () => {
     setLoading(true)
@@ -95,13 +89,6 @@ export const MainPage = () => {
   const classes = useStyles()
 
   const _onSorting = async ({ name, setSort, sortName, status }) => {
-    // setSortNo(false)
-    // setSortPrice(false)
-    // setSortProvince(false)
-    // setSortCity(false)
-    // setSortComodity(false)
-    // setSortSize(false)
-    // setSortTime(false)
     if (name === 'No') {
       let temp = list.reverse();
       console.log(sortName)
@@ -157,10 +144,7 @@ export const MainPage = () => {
           if (sortName === "price") return (b.price) - (a.price)
           if (sortName === "tgl_parsed") return (b.tgl_parsed) - (a.tgl_parsed)
           if (sortName === "timestamp") return (b.timestamp) - (a.timestamp)
-
-
         })
-        console.log("sort", temp[0], sortName)
         await setList([]);
         await setList(temp);
         await setSort(!status);
