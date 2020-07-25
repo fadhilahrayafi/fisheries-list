@@ -2,6 +2,7 @@
     position: 'fixed';
     bottom: 10px;
     right: 10px;
+    // flex-grow: 1;
 }
 
 .header-image {
@@ -18,11 +19,26 @@
     text-align: center;
 }
 
+.header-text-logo {
+    cursor: pointer;
+    color:rgb(98,181,156);
+
+}
+
+.header-main-menu {
+    display: flex;
+    flex-grow: 1;
+    width: 100%;
+    justify-content: space-between;
+}
+
 .header-search {
     position: relative;
     border-radius: 10px;
     border: solid rgb(98,181,156) 2px;
     background-color: white;
+    right: 10px;
+    width: 20% !important;
     &:hover {
         border: solid rgb(228,78,84) 2px;
     }

@@ -1,0 +1,17 @@
+.name-table {
+    cursor: pointer;
+    display: flex;
+    align-items: center !important;
+ 
+    .sorting {
+      display: flex;
+      flex-direction: column;
+      font-size: 8px;
+      margin-right: 10px;
+      opacity: 1;
+  
+      .nonactive {
+        opacity: 0.5;
+      }
+    }
+  }

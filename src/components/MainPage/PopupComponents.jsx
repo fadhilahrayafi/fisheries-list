@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const PopupComponent = (props) => {
   const classes = useStyles();
-  const {title, open, close, type, storeList, setList, fetchList, setStatusAlert, setMessage} = props
+  const {title, open, close, type, storeList, setList, fetchList, setStatusAlert, setMessage, setLoading, setAlertCondition} = props
 
   const [sizeList, setSizeList] = useState([])
   const [proviceList, setProvinceList] = useState([])
@@ -67,6 +67,7 @@ export const PopupComponent = (props) => {
   const fetchArea = () => {
     storeList.read('option_area', {})
     .then(data => {
+      console.log("area", data)
       let tempProvince = []
       let tempCity = []
       data.forEach(area => {
@@ -80,6 +81,8 @@ export const PopupComponent = (props) => {
   }
 
   const addNew = () => {
+    close()
+    setLoading(true)
     storeList.append("list", [
       {
         uuid: getUUID(),
@@ -87,20 +90,23 @@ export const PopupComponent = (props) => {
         area_provinsi: provinsi,
         area_kota: kota,
         size,
-        price
+        price,
+        tgl_parsed: new Date(),
+        timestamp: new Date().getTime()
       }
     ])
     .then(res => {
       console.log(res)
       fetchList()
       setMessage("Successfully added new list!")
+      setAlertCondition("success")
       setStatusAlert(true)
-      close()
       setKomoditas(null)
       setProvinsi(null)
       setKota(null)
       setSize(null)
       setPrice(null)
+      setLoading(false)
     })
     .catch(err => console.log(err))
   }
@@ -115,11 +121,23 @@ export const PopupComponent = (props) => {
     keySearch.forEach((key, i) => {
       inputSearch[key] =  valueSearch[i]
     })
-    storeList.read("List", {search: inputSearch, limit: 10})
+    close()
+    setLoading(true)
+    storeList.read("List", {search: inputSearch})
     .then(data => {
-      setList(data)
-      close()
-      console.log(data)
+      if(data.length > 0) {
+        setList(data)
+        setProvinsi(null)
+        setKota(null)
+        setSize(null)
+        setLoading(false)
+        console.log(data)
+      } else {
+      setMessage("Data not found!")
+      setAlertCondition("error")
+      setStatusAlert(true)
+      setLoading(false)
+      }
     })
     .catch(err => console.log(err))
   }
@@ -223,7 +241,7 @@ export const PopupComponent = (props) => {
                       onChange={({ target: { value } }) => setPrice(value)} 
                       />
                    </div>
-                   <div className="popup-component-input">
+                   {/* <div className="popup-component-input">
                     <TextField
                       required
                       id="outlined-required"
@@ -244,7 +262,7 @@ export const PopupComponent = (props) => {
                       shrink: true,
                       }}
                       />
-                   </div>
+                   </div> */}
                   
                    <div className="popup-component-input">
                    <FormControl className={classes.formControl}>

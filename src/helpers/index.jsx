@@ -1,1 +1,1 @@
-export {formatTime, getUUID, formatMoney} from './helpers'
+export {formatTime, getUUID, formatMoney, formatDate} from './helpers'

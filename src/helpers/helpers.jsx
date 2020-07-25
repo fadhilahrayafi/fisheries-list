@@ -22,6 +22,6 @@ export const getUUID = () => {
 
   
 
-// export const formatDate = (date) => {
-
-// }
+export const formatDate = (date) => {
+  return new Date(date).toLocaleDateString()
+}
